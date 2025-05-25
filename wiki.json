@@ -1,0 +1,73 @@
+{
+  "categories": [
+    {
+      "name": "Silahlar",
+      "description": "Gray Zone Warfare'deki tüm silahlar hakkında bilgiler.",
+      "items": [
+        {
+          "title": "AK-74N",
+          "description": "AK serisinin modernize edilmiş bir versiyonu olan AK-74N, orta menzilde yüksek isabet ve güvenilirlik sunar. Özellikle düşük geri tepmesiyle bilinir.",
+          "data": [
+            ["Tür", "Piyade Tüfeği"],
+            ["Hasar", "50"],
+            ["Atış Hızı", "600 RPM"],
+            ["Şarjör", "30 Fişek"],
+            ["Açıklama", "Rus yapımı, güvenilir bir piyade tüfeği."]
+          ]
+        },
+        {
+          "title": "M4A1",
+          "description": "Amerikan yapımı, yüksek hassasiyetli bir piyade tüfeği olan M4A1, çok yönlülüğü ve modifiye edilebilirliği ile bilinir.",
+          "data": [
+            ["Tür", "Piyade Tüfeği"],
+            ["Hasar", "45"],
+            ["Atış Hızı", "750 RPM"],
+            ["Şarjör", "30 Fişek"],
+            ["Açıklama", "Amerikan yapımı, yüksek hassasiyetli tüfek."]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Görevler",
+      "description": "Gray Zone Warfare'deki görevler ve ödüller.",
+      "items": [
+        {
+          "title": "İlk Temas",
+          "description": "Oyunun başlangıç görevlerinden biri. Belirlenen bir bölgeye sızarak düşman kuvvetlerini temizlemeyi hedefler.",
+          "data": [
+            ["Tür", "Ana Görev"],
+            ["Yer", "Hunter's Paradise"],
+            ["Hedef", "Belirlenen bölgeye git ve düşmanları temizle."],
+            ["Ödül", "5000 USD, 1000 XP"]
+          ]
+        },
+        {
+          "title": "Kayıp Kargo",
+          "description": "Düşen bir uçağın gizemli kargosunu bulmayı ve güvenli bölgeye getirmeyi gerektiren yan görev.",
+          "data": [
+            ["Tür", "Yan Görev"],
+            ["Yer", "Midtown"],
+            ["Hedef", "Düşen uçağın kargosunu bul ve getir."],
+            ["Ödül", "Silah Eki, 2000 XP"]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Haritalar",
+      "description": "Gray Zone Warfare'deki haritaların genel bilgileri.",
+      "items": [
+        {
+          "title": "Hunter's Paradise",
+          "description": "Yoğun ormanlık alana sahip, eski askeri üsler ve terk edilmiş kasabaların bulunduğu tehlikeli bir harita. Yüksek seviyeli düşmanlar içerir.",
+          "data": [
+            ["Bölge", "Ormanlık Alan"],
+            ["Tehdit Seviyesi", "Yüksek"],
+            ["Önemli Noktalar", "Askeri Üs, Terkedilmiş Kasaba"]
+          ]
+        }
+      ]
+    }
+  ]
+}
