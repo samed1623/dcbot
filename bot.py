@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 import asyncio
 import logging
 from collections import deque
+import random
+import re
 
 # Loglama için özel bir handler
 class DiscordLogHandler(logging.Handler):
@@ -122,6 +124,7 @@ if TOKEN is None:
 
 WIKI_FILE = 'wiki.json'
 CONFIG_FILE = 'config.json'
+CHAT_FILE = 'chat_data.json'
 
 def load_config():
     if os.path.exists(CONFIG_FILE):
@@ -173,11 +176,25 @@ def load_wiki_data():
         logger.error(f"Hata: Wiki verilerini yüklerken bir sorun oluştu: {e}")
         return {"categories": []}
 
+def load_chat_data():
+    if not os.path.exists(CHAT_FILE):
+        logger.error(f"Hata: {CHAT_FILE} dosyası bulunamadı.")
+        return {"greetings": [], "responses": {}, "topics": {}, "random_facts": []}
+    try:
+        with open(CHAT_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except json.JSONDecodeError as e:
+        logger.error(f"Hata: {CHAT_FILE} dosyasında JSON ayrıştırma hatası: {e}")
+        return {"greetings": [], "responses": {}, "topics": {}, "random_facts": []}
+    except Exception as e:
+        logger.error(f"Hata: Sohbet verilerini yüklerken bir sorun oluştu: {e}")
+        return {"greetings": [], "responses": {}, "topics": {}, "random_facts": []}
+
 @bot.event
 async def on_ready():
     logger.info(f'{bot.user.name} olarak giriş yapıldı!')
     try:
-        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Gray Zone Warfare Wiki"))
+        await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="Gray Zone Warfare Wiki & Sohbet"))
         logger.info("Bot durumu başarıyla ayarlandı.")
     except Exception as e:
         logger.error(f"Bot durumu ayarlanırken hata oluştu: {e}")
@@ -554,6 +571,182 @@ class CloseChannelView(View):
     def __init__(self, timeout=None):
         super().__init__(timeout=timeout)
         self.add_item(CloseChannelButton())
+
+def get_chat_response(message_content):
+    """Basit pattern matching ile sohbet yanıtları üretir"""
+    chat_data = load_chat_data()
+    message_lower = message_content.lower().strip()
+    
+    # Normalize Turkish characters for better matching
+    message_normalized = message_lower.replace('ç', 'c').replace('ğ', 'g').replace('ı', 'i').replace('ö', 'o').replace('ş', 's').replace('ü', 'u')
+    
+    # Greeting patterns
+    greeting_patterns = ['merhaba', 'selam', 'hey', 'hi', 'hello', 'gunaydin', 'günaydın']
+    if any(pattern in message_normalized for pattern in greeting_patterns):
+        return random.choice(chat_data.get('greetings', ['Merhaba!']))
+    
+    # Common question patterns
+    how_are_you_patterns = ['nasilsin', 'nasılsın', 'ne_haber', 'naber']
+    if any(pattern in message_normalized for pattern in how_are_you_patterns):
+        return random.choice(chat_data.get('responses', {}).get('nasılsın', ['İyiyim, teşekkürler!']))
+    
+    what_doing_patterns = ['ne_yapiyorsun', 'ne yapıyorsun', 'neler_yapiyorsun']
+    if any(pattern in message_normalized for pattern in what_doing_patterns):
+        return random.choice(chat_data.get('responses', {}).get('ne_yapıyorsun', ['Sohbet etmeyi bekliyorum!']))
+    
+    # Thank you patterns
+    thank_patterns = ['tesekkur', 'teşekkür', 'sagol', 'sağol', 'thanks']
+    if any(pattern in message_normalized for pattern in thank_patterns):
+        return random.choice(chat_data.get('responses', {}).get('teşekkür', ['Rica ederim!']))
+    
+    # Good morning/night patterns
+    if 'gunaydin' in message_normalized or 'günaydın' in message_normalized:
+        return random.choice(chat_data.get('responses', {}).get('günaydın', ['Günaydın!']))
+    
+    good_night_patterns = ['iyi_geceler', 'iyi geceler', 'bye', 'gule_gule', 'güle güle']
+    if any(pattern in message_normalized for pattern in good_night_patterns):
+        return random.choice(chat_data.get('responses', {}).get('iyi_geceler', ['İyi geceler!']))
+    
+    # Help patterns
+    help_patterns = ['yardim', 'yardım', 'help']
+    if any(pattern in message_normalized for pattern in help_patterns):
+        return random.choice(chat_data.get('responses', {}).get('yardım', ['Nasıl yardım edebilirim?']))
+    
+    # Topic-based responses
+    topics = chat_data.get('topics', {})
+    for topic, responses in topics.items():
+        if topic in message_normalized:
+            return random.choice(responses)
+    
+    # Game patterns
+    game_patterns = ['oyun', 'game', 'gray_zone', 'gzw']
+    if any(pattern in message_normalized for pattern in game_patterns):
+        return random.choice(chat_data.get('responses', {}).get('oyun', ['Gray Zone Warfare hakkında konuşalım!']))
+    
+    # Bored patterns
+    bored_patterns = ['sikildim', 'sıkıldım', 'bored']
+    if any(pattern in message_normalized for pattern in bored_patterns):
+        return random.choice(chat_data.get('responses', {}).get('sıkıldım', ['Bir şeyler öğrenelim!']))
+    
+    # Random fact request
+    fact_patterns = ['bilgi', 'fact', 'gercek', 'gerçek', 'anlat']
+    if any(pattern in message_normalized for pattern in fact_patterns):
+        facts = chat_data.get('random_facts', [])
+        if facts:
+            return random.choice(facts)
+    
+    # Default response
+    return random.choice(chat_data.get('responses', {}).get('default', ['İlginç! Daha fazla anlat.']))
+
+@bot.command(name='yap', aliases=['sohbet', 'chat'])
+async def chat_command(ctx, *, message: str = None):
+    """Sohbet komutu - botla casual konuşma yapmak için"""
+    logger.info(f"'{ctx.author.name}' tarafından '!yap' komutu kullanıldı. Mesaj: {message}")
+    
+    if message is None:
+        # If no message provided, start a conversation
+        chat_data = load_chat_data()
+        greeting = random.choice(chat_data.get('greetings', ['Merhaba! Seninle sohbet etmeye hazırım.']))
+        response = f"{greeting}\n\nBana bir şeyler yazabilirsin, sohbet edelim! 💬\nÖrnekler: `!yap merhaba`, `!yap nasılsın`, `!yap Gray Zone Warfare oynuyor musun?`"
+    else:
+        response = get_chat_response(message)
+    
+    embed = discord.Embed(
+        title="💬 Sohbet Zamanı",
+        description=response,
+        color=discord.Color.green(),
+        timestamp=discord.utils.utcnow()
+    )
+    
+    if message:
+        embed.add_field(name="Sen:", value=message, inline=False)
+        embed.add_field(name="Ben:", value=response, inline=False)
+    
+    embed.set_footer(text="Gray Zone Warfare Wiki Bot | Sohbet Modu")
+    
+    try:
+        await ctx.send(embed=embed)
+        logger.info(f"Sohbet yanıtı gönderildi: {ctx.author.name}")
+    except Exception as e:
+        logger.error(f"Sohbet mesajı gönderilirken hata oluştu: {e}")
+        await ctx.send("Sohbet ederken bir hata oluştu. Lütfen daha sonra tekrar deneyin.")
+
+@bot.command(name='random', aliases=['rastgele'])
+async def random_fact(ctx):
+    """Rastgele bir bilgi paylaşır"""
+    logger.info(f"'{ctx.author.name}' tarafından '!random' komutu kullanıldı.")
+    
+    chat_data = load_chat_data()
+    facts = chat_data.get('random_facts', [])
+    
+    if not facts:
+        await ctx.send("Üzgünüm, şu anda paylaşabileceğim rastgele bilgi yok.")
+        return
+    
+    fact = random.choice(facts)
+    
+    embed = discord.Embed(
+        title="🎲 Rastgele Bilgi",
+        description=fact,
+        color=discord.Color.blue(),
+        timestamp=discord.utils.utcnow()
+    )
+    embed.set_footer(text="Gray Zone Warfare Wiki Bot | Bilgi Zamanı")
+    
+    try:
+        await ctx.send(embed=embed)
+        logger.info(f"Rastgele bilgi gönderildi: {ctx.author.name}")
+    except Exception as e:
+        logger.error(f"Rastgele bilgi gönderilirken hata oluştu: {e}")
+        await ctx.send("Bilgi paylaşırken bir hata oluştu.")
+
+@bot.command(name='komutlar', aliases=['commands', 'help'])
+async def help_command(ctx):
+    """Bot komutlarını listeler"""
+    logger.info(f"'{ctx.author.name}' tarafından '!komutlar' komutu kullanıldı.")
+    
+    embed = discord.Embed(
+        title="🤖 Bot Komutları",
+        description="Gray Zone Warfare Wiki Bot'un kullanabileceğiniz komutları:",
+        color=discord.Color.orange(),
+        timestamp=discord.utils.utcnow()
+    )
+    
+    # Wiki commands
+    embed.add_field(
+        name="📚 Wiki Komutları",
+        value="`!wiki` - Ana wiki menüsünü açar\n`!wiki ara <kelime>` - Wiki'de arama yapar",
+        inline=False
+    )
+    
+    # Chat commands  
+    embed.add_field(
+        name="💬 Sohbet Komutları",
+        value="`!yap <mesaj>` - Botla sohbet edersiniz\n`!random` - Rastgele bir bilgi paylaşır\n`!komutlar` - Bu yardım mesajını gösterir",
+        inline=False
+    )
+    
+    # Admin commands
+    embed.add_field(
+        name="⚙️ Yönetici Komutları",
+        value="`!setlogchannel` - Log kanalını ayarlar (Sadece yöneticiler)",
+        inline=False
+    )
+    
+    embed.add_field(
+        name="💡 İpuçları",
+        value="• Wiki için geçici kanallar oluşturulur\n• Sohbet komutları doğrudan bu kanalda çalışır\n• Bot Türkçe konuşur!",
+        inline=False
+    )
+    
+    embed.set_footer(text="Gray Zone Warfare Wiki Bot | Yardım")
+    
+    try:
+        await ctx.send(embed=embed)
+        logger.info(f"Yardım mesajı gönderildi: {ctx.author.name}")
+    except Exception as e:
+        logger.error(f"Yardım mesajı gönderilirken hata oluştu: {e}")
+        await ctx.send("Yardım mesajı gönderilirken bir hata oluştu.")
 
 @bot.group(name='wiki', invoke_without_command=True)
 async def wiki_group(ctx):

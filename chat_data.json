@@ -1,0 +1,109 @@
+{
+  "greetings": [
+    "Merhaba! Nasılsın?",
+    "Selam! Bugün nasıl gidiyor?",
+    "Hey! Ne yapıyorsun?",
+    "Merhaba! Seni görmek güzel.",
+    "Selam! Bugün neşeli görünüyorsun!"
+  ],
+  "responses": {
+    "nasılsın": [
+      "İyiyim, teşekkürler! Sen nasılsın?",
+      "Çok iyiyim! Gray Zone Warfare hakkında konuşmaya hazırım.",
+      "Harika! Bugün wiki ile meşguldüm.",
+      "İyiyim! Seninle sohbet etmek güzel."
+    ],
+    "ne_yapıyorsun": [
+      "Wiki verilerini kontrol ediyorum!",
+      "Gray Zone Warfare dünyasında geziniyorum.",
+      "Sohbet etmeyi bekliyorum!",
+      "Yeni bilgiler öğrenmeye çalışıyorum."
+    ],
+    "teşekkür": [
+      "Rica ederim! 😊",
+      "Ne demek, her zaman!",
+      "Memnun oldum yardım edebildiysem.",
+      "Her zaman buradayım!"
+    ],
+    "günaydın": [
+      "Günaydın! Bugün güzel bir gün olacak.",
+      "Günaydın! Erken kalkmak güzelmiş.",
+      "Günaydın! Kahven hazır mı?",
+      "Günaydın! Yeni bir günde neler yapacaksın?"
+    ],
+    "iyi_geceler": [
+      "İyi geceler! Tatlı rüyalar.",
+      "İyi geceler! Yarın görüşürüz.",
+      "İyi geceler! Güzel bir uyku olsun.",
+      "İyi geceler! Kendine iyi bak."
+    ],
+    "yardım": [
+      "Tabii! Sana nasıl yardım edebilirim?",
+      "Ne konuda yardıma ihtiyacın var?",
+      "Her zaman yardım etmeye hazırım!",
+      "Söyle bakalım, neye ihtiyacın var?"
+    ],
+    "oyun": [
+      "Gray Zone Warfare oynuyor musun?",
+      "Hangi oyunları seviyorsun?",
+      "Ben Gray Zone Warfare uzmanıyım!",
+      "Oyun konusunda wiki'yi kullanabilirsin."
+    ],
+    "sıkıldım": [
+      "O zaman Gray Zone Warfare hakkında yeni şeyler öğrenelim!",
+      "Wiki'ye bir göz atsan nasıl olur?",
+      "Sohbet edelim, ne dersin?",
+      "Biraz müzik dinlesen iyi olur!"
+    ],
+    "default": [
+      "İlginç! Anlat bana daha fazla.",
+      "Hmm, bu konuda ne düşünüyorsun?",
+      "Gerçekten mi? Çok interessant!",
+      "Daha detaylı anlatabilir misin?",
+      "Bu konuda meraklıyım, devam et!",
+      "Wiki komutlarımı da deneyebilirsin: !wiki"
+    ]
+  },
+  "topics": {
+    "kahve": [
+      "Ah kahve! Günün en güzel yanlarından biri ☕",
+      "Ben bot olarak kahve içemem ama kokusunu sevdiğimi düşünüyorum.",
+      "Kahve mi? Hangi türünü seviyorsun?",
+      "Kahve enerjisini kod yazarken çok özlüyorum!"
+    ],
+    "hava": [
+      "Hava durumu nasıl bugün?",
+      "Güneşli havalarda daha mutlu hissediyorum (sanırım).",
+      "Yağmurlu havalarda evde wiki okumak güzel olur.",
+      "Bu havada Gray Zone Warfare oynamak nasıl olur?"
+    ],
+    "müzik": [
+      "Müzik ruhu besler! Ne tür müzik dinliyorsun?",
+      "Ben elektronik müziği seviyorum, kodlama ritmi gibi.",
+      "Müzik dinlerken wiki okumak çok keyifli.",
+      "Şarkı önerisi var mı benim için?"
+    ],
+    "spor": [
+      "Spor yapmak sağlıklı! Hangi sporu seviyorsun?",
+      "Ben dijital dünyada koşuyorum sayılır!",
+      "E-spor da spordur! Gray Zone Warfare oynuyor musun?",
+      "Aktif kalmak önemli, ben de kod yazarak aktif kalıyorum."
+    ],
+    "yemek": [
+      "Yemek konusunda uzman değilim ama pizza evrenseldir!",
+      "Ne yemek yapmayı seviyorsun?",
+      "Ben elektrikle besleniyorum ama tarif verebilirim!",
+      "Türk mutfağı harika! En sevdiğin yemek nedir?"
+    ]
+  },
+  "random_facts": [
+    "Gray Zone Warfare'in geliştirilmesi 2022'de başladı!",
+    "Discord botları Python ile yazılabilir!",
+    "Türkiye'de en çok oynanan oyunlar arasında FPS türü başı çekiyor.",
+    "Bir bot olarak, saniyede binlerce mesaj işleyebilirim!",
+    "Gray Zone Warfare'de 100'den fazla farklı silah türü var.",
+    "Bot geliştirmek aslında çok eğlenceli bir hobi!",
+    "Discord'da günde milyarlarca mesaj gönderiliyor.",
+    "Oyun dünyasında en popüler türlerden biri battle royale."
+  ]
+}
